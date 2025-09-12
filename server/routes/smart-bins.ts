@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { supabase } from '../lib/supabase';
+import { supabase, SmartBin, BinType } from '../lib/supabase';
+import { Request, Response } from 'express';
+
+interface WasteClassification {
+  type: string;
+  confidence: number;
+  points_earned: number;
+  bin_id?: string;
+}
 
 const router = Router();
 
@@ -55,7 +63,7 @@ router.post('/bins/:binId/record-disposal', async (req, res) => {
 
   try {
     // Record the waste classification
-    const { data: classification, error: classError } = await supabase
+    const { data: classification, error: classError }: { data: WasteClassification | null, error: any } = await supabase
       .from('waste_classifications')
       .insert({
         user_id: userId,
@@ -71,8 +79,13 @@ router.post('/bins/:binId/record-disposal', async (req, res) => {
     const { error: pointsError } = await supabase
       .from('user_profiles')
       .update({
-        points: supabase.raw('points + ?', [classification.points_earned]),
-        waste_classified: supabase.raw('waste_classified + 1')
+        points: classification?.points_earned || 0,
+        waste_classified: supabase
+          .from('user_profiles')
+          .select('waste_classified')
+          .eq('id', userId)
+          .single()
+          .then(({ data }) => (data?.waste_classified || 0) + 1)
       })
       .eq('id', userId);
 
@@ -80,7 +93,7 @@ router.post('/bins/:binId/record-disposal', async (req, res) => {
 
     res.json({
       message: 'Waste disposal recorded successfully',
-      pointsEarned: classification.points_earned
+      pointsEarned: classification?.points_earned || 0
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
