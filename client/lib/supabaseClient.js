@@ -2,9 +2,9 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Support both Vite (import.meta.env.VITE_*) and Next.js (process.env.NEXT_PUBLIC_*)
-const viteEnv = typeof import !== 'undefined' && typeof import.meta !== 'undefined' ? import.meta.env : {}
-const supabaseUrl = (viteEnv?.VITE_SUPABASE_URL) || process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || ''
-const supabaseAnonKey = (viteEnv?.VITE_SUPABASE_ANON_KEY) || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || ''
+const viteEnv = (typeof import.meta !== 'undefined') ? import.meta.env : {}
+const supabaseUrl = (viteEnv?.VITE_SUPABASE_URL) || process.env?.NEXT_PUBLIC_SUPABASE_URL || process.env?.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = (viteEnv?.VITE_SUPABASE_ANON_KEY) || process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env?.VITE_SUPABASE_ANON_KEY || ''
 
 if (!supabaseUrl || !supabaseAnonKey) {
   // Non-fatal: allows app to run with mock data paths
