@@ -12,9 +12,7 @@
   "env": {
     "VITE_SUPABASE_URL": "https://xiokgvyelqdghuyddoit.supabase.co",
     "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhpb2tndnllbHFkZ2h1eWRkb2l0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODcwMDYsImV4cCI6MjA3MTc2MzAwNn0.9BcM8Fl5_9bmq_43R2k8GCt_hCMLjKDzXbe2aM-U8eU",
-    "VITE_ML_API_ENDPOINT": "https://recycling-hub-model-backend-1.onrender.com",
-    "VITE_IOT_HUB_URL": "@iot_hub_url",
-    "VITE_MAPBOX_ACCESS_TOKEN": "@mapbox_token"
+    "VITE_ML_API_ENDPOINT": "https://recycling-hub-model-backend-1.onrender.com"
   },
   "build": {
     "env": {
