@@ -37,6 +37,51 @@ export class VoucherOutOfStockError extends Error {
 }
 
 /**
+ * Get user's reward points summary
+ */
+export const getRewardPointsSummary = async (userId: string) => {
+  if (!supabase) {
+    throw new Error("Supabase not configured");
+  }
+
+  // Get total points from user profile
+  const { data: profile, error: profileError } = await supabase
+    .from("user_profiles")
+    .select("points")
+    .eq("id", userId)
+    .single();
+
+  if (profileError) throw profileError;
+
+  // Get redeemed points from voucher redemptions
+  const { data: redemptions, error: redemptionsError } = await supabase
+    .from("voucher_redemptions")
+    .select("points_spent")
+    .eq("user_id", userId);
+
+  if (redemptionsError) throw redemptionsError;
+
+  // Get pending rewards
+  const { data: pendingRewards, error: pendingError } = await supabase
+    .from("pending_rewards")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("status", "pending");
+
+  if (pendingError) throw pendingError;
+
+  const totalPoints = profile?.points || 0;
+  const redeemedPoints = redemptions?.reduce((acc, curr) => acc + (curr.points_spent || 0), 0) || 0;
+  
+  return {
+    total: totalPoints,
+    available: totalPoints - redeemedPoints,
+    redeemed: redeemedPoints,
+    pendingRewards: pendingRewards || []
+  };
+}
+
+/**
  * Fetch all available vouchers from Supabase
  */
 export const fetchVouchers = async (): Promise<Voucher[]> => {

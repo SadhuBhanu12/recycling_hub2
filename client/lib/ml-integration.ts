@@ -1,6 +1,6 @@
 // src/lib/ml-integration.ts
-import { useState } from "react";
-import { ml, defaults } from "@/lib/config";
+import { defaults } from "@/lib/config";
+import * as React from "react";
 
 export type ClassificationResult = {
   type: "biodegradable" | "recyclable" | "hazardous";
@@ -13,10 +13,7 @@ export type ClassificationResult = {
  * Expects backend response: { class: string, confidence: float(0..1), processingTime: ms }
  */
 export async function classifyWaste(file: File): Promise<ClassificationResult> {
-  const base = (ml.apiEndpoint || "").trim();
-  const API_URL = base
-    ? `${base.replace(/\/$/, "")}/predict`
-    : "http://localhost:8000/predict";
+  const API_URL = "https://recycling-hub-model-backend-1.onrender.com/predict";
 
   const formData = new FormData();
   formData.append("file", file);
@@ -71,8 +68,7 @@ function mapBackendClass(predicted: string): ClassificationResult["type"] {
 }
 
 export function validateImageForClassification(file: File) {
-  const allowed = defaults.supportedImageTypes as string[];
-  if (!allowed.includes(file.type)) {
+  if (!defaults.supportedImageTypes.includes(file.type as "image/jpeg" | "image/png" | "image/webp")) {
     return {
       isValid: false,
       error: "Only JPG, PNG or WEBP images are allowed.",
@@ -88,7 +84,7 @@ export function validateImageForClassification(file: File) {
 }
 
 export function useWasteClassification() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const run = async (file: File) => {
     setLoading(true);

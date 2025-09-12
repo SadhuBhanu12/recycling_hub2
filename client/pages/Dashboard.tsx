@@ -48,6 +48,12 @@ interface DashboardStats {
   co2Saved: number;
   weeklyProgress: number;
   monthlyGoal: number;
+  rewardPoints: {
+    total: number;
+    available: number;
+    redeemed: number;
+    pendingRewards: Array<{id: string; points: number; description: string}>;
+  };
 }
 
 // Animated Counter Component
@@ -100,14 +106,20 @@ export default function Dashboard() {
 
   // Calculate dashboard stats
   const stats: DashboardStats = {
-    totalWasteSegregated: userData.waste_classified,
-    biodegradableCount: Math.floor(userData.waste_classified * 0.4),
-    recyclableCount: Math.floor(userData.waste_classified * 0.45),
-    hazardousCount: Math.floor(userData.waste_classified * 0.15),
-    ecoPointsEarned: userData.points,
-    co2Saved: Math.floor(userData.waste_classified * 2.3),
-    weeklyProgress: 78,
-    monthlyGoal: 200,
+    totalWasteSegregated: data?.totalItems || 0,
+    biodegradableCount: biodegradable.length,
+    recyclableCount: recyclable.length,
+    hazardousCount: hazardous.length,
+    ecoPointsEarned: data?.totalPoints || 0,
+    co2Saved: calculateCO2Saved(data?.totalItems || 0),
+    weeklyProgress: data?.weeklyProgress || 0,
+    monthlyGoal: data?.monthlyGoal || 100,
+    rewardPoints: {
+      total: data?.totalPoints || 0,
+      available: data?.availablePoints || 0,
+      redeemed: data?.redeemedPoints || 0,
+      pendingRewards: data?.pendingRewards || []
+    }
   };
 
   // Animation variants
