@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient'
+import { supabase } from './supabase'
 
 export const signUp = async (email, password) => {
   if (!supabase) throw new Error('Supabase not configured')
@@ -25,6 +25,3 @@ export const getUser = async () => {
   const { data } = await supabase.auth.getUser()
   return data?.user ?? null
 }
-
-
-
