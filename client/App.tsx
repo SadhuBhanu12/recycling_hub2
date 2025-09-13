@@ -291,6 +291,16 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/buyback/:orderId"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <BuyBackPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/smart-bins"
                   element={
                     <ProtectedRoute>

@@ -105,29 +105,29 @@ export default function Dashboard() {
     classifications.length > 0 ? classifications : mockData.classifications;
 
   // Calculate dashboard stats
-  const { data: userData } = useUserProfile();
-  const { data: wasteData } = useWasteClassifications();
-  
-  const biodegradable = wasteData?.filter(w => w.classification === 'biodegradable') || [];
-  const recyclable = wasteData?.filter(w => w.classification === 'recyclable') || [];
-  const hazardous = wasteData?.filter(w => w.classification === 'hazardous') || [];
+  const biodegradable = userClassifications.filter(w => w.classification === 'biodegradable');
+  const recyclable = userClassifications.filter(w => w.classification === 'recyclable');
+  const hazardous = userClassifications.filter(w => w.classification === 'hazardous');
 
   const calculateCO2Saved = (items: number) => items * 2.5; // 2.5kg CO2 per item average
 
+  const monthlyGoal = 100;
+  const weeklyProgress = Math.min(100, Math.round((userClassifications.length / monthlyGoal) * 100));
+
   const stats: DashboardStats = {
-    totalWasteSegregated: wasteData?.length || 0,
+    totalWasteSegregated: userClassifications.length,
     biodegradableCount: biodegradable.length,
     recyclableCount: recyclable.length,
     hazardousCount: hazardous.length,
-    ecoPointsEarned: userData?.points || 0,
-    co2Saved: calculateCO2Saved(wasteData?.length || 0),
-    weeklyProgress: userData?.weeklyProgress || 0,
-    monthlyGoal: userData?.monthlyGoal || 100,
+    ecoPointsEarned: userData.points,
+    co2Saved: calculateCO2Saved(userClassifications.length),
+    weeklyProgress,
+    monthlyGoal,
     rewardPoints: {
-      total: userData?.points || 0,
-      available: userData?.availablePoints || 0,
-      redeemed: userData?.redeemedPoints || 0,
-      pendingRewards: userData?.pendingRewards || []
+      total: userData.points,
+      available: userData.points,
+      redeemed: 0,
+      pendingRewards: []
     }
   };
 
