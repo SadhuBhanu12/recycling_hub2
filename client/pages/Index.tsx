@@ -181,7 +181,7 @@ export default function Index() {
   const { classifications } = useWasteClassifications(user?.id);
 
   // ML Classification
-  const { classifyWaste, loading: mlLoading, modelReady } = useWasteClassification();
+  const { classifyWaste, loading: mlLoading } = useWasteClassification();
   
   // Location and maps
   const { location, getCurrentLocation } = useGeolocation();
